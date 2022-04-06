@@ -11,6 +11,10 @@
 ## Exercise
 
 ```
+docker run --rm --entrypoint echo --name my-node-container node:17-alpine3.14 "argument"
+```
+
+```
 docker run --rm --entrypoint sh --name my-node-container -v $(pwd):/tmp -p 8000:80 node:17-alpine3.14 -c "sleep infinity"
 ```
 
