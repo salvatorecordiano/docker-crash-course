@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+
+  php:
+    container_name: demo-app-compose_php
+    image: ilariopierbattista/demo-app:1
+    build:
+      context: ../demo-app/php/
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=mysql://root:secret-password@mysql.demo-app/db_demo
+    ports:
+      - '10088:8000'
+    networks:
+      - app-compose-net
+    depends_on:
+      - mysql
+
+  mysql:
+    container_name: demo-app-compose_mysql
+    image: mysql:8
+    environment:
+      - MYSQL_DATABASE=db_demo
+      - MYSQL_ROOT_PASSWORD=secret-password
+    networks:
+      app-compose-net:
+        aliases:
+          - 'mysql.demo-app'
+    volumes:
+      - type: bind
+        source: ../demo-app/dump.sql
+        target: /docker-entrypoint-initdb.d/dump.sql
+
+networks:
+  app-compose-net:
+    driver: bridge
